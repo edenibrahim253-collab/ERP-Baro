@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.tmp-mutation/
+node_modules/
+*.log
+.DS_Store

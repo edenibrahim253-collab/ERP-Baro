@@ -1,14 +1,19 @@
 # BARO ERP 360° — Architecture & Schema Design Package
 
-Design documents only. **No application code, no DocType JSON, no installed runtime.** This is the artefact to approve before a Frappe integrator builds the `baro_core` app.
+The design documents below are the approved artefact, and they have been **built**: `baro_core/`
+is the Frappe app generated from them (11 DocTypes, 9 fixture files, integration layer, scheduler,
+patches, tests). There is still no runtime here — no Python, no MariaDB, no bench — so the app is
+verified structurally, not executed. `docs/80-verification-checklist.md` §11 lists the 13 checks
+`tools/validate-structure.mjs` runs and what they cannot prove.
 
-Scope is the **asset spine** — customers, inventory/warehouse, GPS devices, SIM cards, vehicles, device assignments, installations — targeted at **ERPNext v16 stable**, to be built later on WSL2 Ubuntu + bench.
+Scope is the **asset spine** — customers, inventory/warehouse, GPS devices, SIM cards, vehicles, device assignments, installations — targeted at **ERPNext v16 stable**, to be run later on WSL2 Ubuntu + bench.
 
 ## Status
 
 | | |
 |---|---|
 | Release-1 boundary | fixed: the spine; every other module is named, deferred and given an unlock condition (`docs/90-later-phase-backlog.md`) |
+| Built | `baro_core/` — 11 DocTypes, controllers, 9 fixture files (3 are documented placeholders), integration layer, scheduler, 4 patches, 3 test modules (`baro_core/README.md`) |
 | Custom schema proposed | 9 business DocTypes + 1 Single + 15 Custom Fields on 6 standard DocTypes (`docs/03-standard-vs-custom-decision-table.md` §2) |
 | Verified against | the supplied `erpnext-develop.zip` source (`docs/appendix/spot-check-paths.md`) |
 | Verification debt | every standard-DocType claim from that tree is tagged `[verify-vs-v16]` — the archive is post-v16 (frappe v17-dev, Python ≥3.14) (`docs/04-version-compatibility-matrix.md`) |

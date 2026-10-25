@@ -1,0 +1,5 @@
+[post_model_sync]
+baro_core.patches.v1.add_unique_custom_fields
+baro_core.patches.v1.add_active_key_columns_and_indexes
+baro_core.patches.v1.backfill_active_keys
+baro_core.patches.v1.integrity_audit

@@ -1,0 +1,56 @@
+[
+ {
+  "doctype": "Report",
+  "name": "BARO - Pending Activations",
+  "ref_doctype": "Baro Device Assignment",
+  "report_type": "Query Report",
+  "module": "baro_field_service",
+  "is_standard": "Yes",
+  "disabled": 0,
+  "disable_prepared_report": 0,
+  "roles": [
+   {"role": "BARO Service Supervisor"},
+   {"role": "BARO Approver"},
+   {"role": "BARO Fleet Officer"},
+   {"role": "BARO Stock Manager"},
+   {"role": "BARO System Manager"}
+  ],
+  "query": "select a.name as `Assignment`, a.serial_no as `Serial No`, a.baro_imei as `IMEI`, a.baro_vehicle as `Vehicle`, a.customer as `Customer`, a.from_time as `Installed At`, a.baro_technician as `Installer`, a.baro_activation_status as `Activation` from `tabBaro Device Assignment` a where a.docstatus = 1 and a.baro_status = 'Active' and a.baro_activation_status = 'Not Verified' order by a.from_time asc"
+ },
+ {
+  "doctype": "Report",
+  "name": "BARO - Assignment History",
+  "ref_doctype": "Baro Device Assignment",
+  "report_type": "Query Report",
+  "module": "baro_field_service",
+  "is_standard": "Yes",
+  "disabled": 0,
+  "disable_prepared_report": 1,
+  "roles": [
+   {"role": "BARO Service Supervisor"},
+   {"role": "BARO Approver"},
+   {"role": "BARO Fleet Officer"},
+   {"role": "BARO Support Agent"},
+   {"role": "BARO Accounts User"},
+   {"role": "BARO Report Viewer"}
+  ],
+  "query": "select a.name as `Assignment`, a.baro_vehicle as `Vehicle`, a.serial_no as `Serial No`, a.baro_imei as `IMEI`, a.customer as `Customer`, a.baro_sim_card as `SIM`, a.from_time as `From`, a.to_time as `To`, a.baro_status as `Status`, a.baro_technician as `Installer` from `tabBaro Device Assignment` a where a.docstatus = 1 order by a.baro_vehicle asc, a.from_time asc"
+ },
+ {
+  "doctype": "Report",
+  "name": "BARO - Fleet Reconciliation",
+  "ref_doctype": "Baro Reconciliation Exception",
+  "report_type": "Query Report",
+  "module": "baro_integrations",
+  "is_standard": "Yes",
+  "disabled": 0,
+  "disable_prepared_report": 1,
+  "roles": [
+   {"role": "BARO Service Supervisor"},
+   {"role": "BARO Approver"},
+   {"role": "BARO System Manager"},
+   {"role": "BARO Report Viewer"}
+  ],
+  "query": "select e.name as `Exception`, e.baro_exception_type as `Type`, e.baro_platform as `Platform`, e.serial_no as `Serial No`, e.baro_vehicle as `Vehicle`, e.customer as `Customer`, e.baro_status as `Status`, e.baro_assigned_role as `Queue`, e.baro_impact_billable as `Billable`, e.baro_detected_at as `Detected`, e.baro_cleared_automatically as `Auto Cleared`, e.baro_details as `Details` from `tabBaro Reconciliation Exception` e where e.baro_status in ('Open', 'Acknowledged', 'In Progress') order by e.baro_impact_billable desc, e.baro_detected_at asc"
+ }
+]

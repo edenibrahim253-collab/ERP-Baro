@@ -1,0 +1,29 @@
+[project]
+name = "baro-core"
+authors = [
+    { name = "BARO Group", email = "it@barogroup.example" }
+]
+description = "BARO ERP 360 - asset spine for GPS tracking, speed limiters, installations and service"
+requires-python = ">=3.11"
+readme = "README.md"
+license = "MIT"
+dynamic = ["version"]
+dependencies = []
+
+# requires-python and the frappe pin below are the two values to confirm against the
+# v16 stable release line before the first `bench new-site` (docs/04-version-compatibility-matrix.md).
+# The reference archive inspected during design was post-v16 (frappe >=17-dev, Python >=3.14).
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.bench.frappe-dependencies]
+# Pinned, never floated (docs/30-schema-conventions.md #15).
+frappe = ">=16.0.0,<17.0.0"
+
+[tool.flit.module]
+name = "baro_core"

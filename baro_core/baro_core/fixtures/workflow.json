@@ -1,0 +1,102 @@
+[
+ {
+  "doctype": "Workflow",
+  "name": "BARO Device Assignment",
+  "document_type": "Baro Device Assignment",
+  "workflow_state_field": "baro_status",
+  "is_active": 1,
+  "send_email_alert": 0,
+  "override_status": 0,
+  "states": [
+   {"state": "Draft", "doc_status": "0", "allow_edit": 1, "allow_cancel": 1, "is_optional": 0, "color": "Gray", "role": [{"role": "BARO Installer"}, {"role": "BARO Service Supervisor"}, {"role": "BARO Fleet Officer"}]},
+   {"state": "Pending Approval", "doc_status": "0", "allow_edit": 0, "allow_cancel": 1, "is_optional": 0, "color": "Orange", "role": [{"role": "BARO Approver"}]},
+   {"state": "Active", "doc_status": "1", "allow_edit": 0, "allow_cancel": 1, "is_optional": 0, "color": "Green", "role": [{"role": "BARO Service Supervisor"}, {"role": "BARO Approver"}]},
+   {"state": "Ended", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Blue", "role": [{"role": "BARO Service Supervisor"}]},
+   {"state": "Superseded", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Purple", "role": [{"role": "BARO Approver"}]}
+  ],
+  "transitions": [
+   {"state": "Draft", "action": "Submit for Approval", "next_state": "Pending Approval", "allowed": [{"role": "BARO Service Supervisor"}, {"role": "BARO Fleet Officer"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_status == 'Draft'"},
+   {"state": "Pending Approval", "action": "Approve", "next_state": "Active", "allowed": [{"role": "BARO Approver"}], "allow_self_approval": 0, "visible": 1, "condition": "doc.baro_status == 'Pending Approval'"},
+   {"state": "Pending Approval", "action": "Reject", "next_state": "Draft", "allowed": [{"role": "BARO Approver"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_status == 'Pending Approval'"},
+   {"state": "Active", "action": "End Assignment", "next_state": "Ended", "allowed": [{"role": "BARO Service Supervisor"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.to_time and doc.baro_status == 'Active'"},
+   {"state": "Active", "action": "Supersede", "next_state": "Superseded", "allowed": [{"role": "BARO Approver"}], "allow_self_approval": 0, "visible": 1, "condition": "doc.baro_status == 'Active' and doc.baro_replaced_by"}
+  ]
+ },
+ {
+  "doctype": "Workflow",
+  "name": "BARO Device RMA",
+  "document_type": "Baro Device RMA",
+  "workflow_state_field": "baro_rma_status",
+  "is_active": 1,
+  "send_email_alert": 0,
+  "override_status": 0,
+  "states": [
+   {"state": "Open", "doc_status": "0", "allow_edit": 1, "allow_cancel": 1, "is_optional": 0, "color": "Gray", "role": [{"role": "BARO Support Agent"}, {"role": "BARO Installer"}]},
+   {"state": "Awaiting Return", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Orange", "role": [{"role": "BARO Stock Manager"}]},
+   {"state": "Received", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Yellow", "role": [{"role": "BARO Stock Manager"}]},
+   {"state": "Inspected", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Blue", "role": [{"role": "BARO Service Supervisor"}]},
+   {"state": "Replaced", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Green", "role": [{"role": "BARO Service Supervisor"}]},
+   {"state": "Refunded", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Green", "role": [{"role": "BARO Accounts User"}]},
+   {"state": "Scrapped", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Red", "role": [{"role": "BARO Approver"}]},
+   {"state": "Closed", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "DarkGray", "role": [{"role": "BARO Service Supervisor"}]}
+  ],
+  "transitions": [
+   {"state": "Open", "action": "Approve RMA", "next_state": "Awaiting Return", "allowed": [{"role": "BARO Approver"}, {"role": "BARO Service Supervisor"}], "allow_self_approval": 0, "visible": 1, "condition": "doc.baro_rma_status == 'Open'"},
+   {"state": "Awaiting Return", "action": "Record Return", "next_state": "Received", "allowed": [{"role": "BARO Stock Manager"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_rma_status == 'Awaiting Return'"},
+   {"state": "Received", "action": "Inspect", "next_state": "Inspected", "allowed": [{"role": "BARO Service Supervisor"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_inspection"},
+   {"state": "Inspected", "action": "Replace", "next_state": "Replaced", "allowed": [{"role": "BARO Service Supervisor"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_replacement_serial and doc.baro_rma_status == 'Inspected'"},
+   {"state": "Inspected", "action": "Refund", "next_state": "Refunded", "allowed": [{"role": "BARO Accounts User"}, {"role": "BARO Finance Approver"}], "allow_self_approval": 0, "visible": 1, "condition": "doc.baro_rma_status == 'Inspected'"},
+   {"state": "Inspected", "action": "Scrap", "next_state": "Scrapped", "allowed": [{"role": "BARO Approver"}], "allow_self_approval": 0, "visible": 1, "condition": "doc.baro_rma_status == 'Inspected'"},
+   {"state": "Replaced", "action": "Close", "next_state": "Closed", "allowed": [{"role": "BARO Service Supervisor"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_rma_status == 'Replaced'"},
+   {"state": "Refunded", "action": "Close", "next_state": "Closed", "allowed": [{"role": "BARO Service Supervisor"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_rma_status == 'Refunded'"},
+   {"state": "Scrapped", "action": "Close", "next_state": "Closed", "allowed": [{"role": "BARO Service Supervisor"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_rma_status == 'Scrapped'"}
+  ]
+ },
+ {
+  "doctype": "Workflow",
+  "name": "BARO SIM Lifecycle",
+  "document_type": "Baro SIM Card",
+  "workflow_state_field": "baro_sim_status",
+  "is_active": 1,
+  "send_email_alert": 0,
+  "override_status": 0,
+  "states": [
+   {"state": "Provisioned", "doc_status": "0", "allow_edit": 1, "allow_cancel": 1, "is_optional": 0, "color": "Gray", "role": [{"role": "BARO Connectivity Admin"}]},
+   {"state": "Activated", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Green", "role": [{"role": "BARO Connectivity Admin"}]},
+   {"state": "Suspended", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Orange", "role": [{"role": "BARO Approver"}, {"role": "BARO Finance Approver"}]},
+   {"state": "Deactivated", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Blue", "role": [{"role": "BARO Connectivity Admin"}]},
+   {"state": "Expired", "doc_status": "1", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Red", "role": [{"role": "BARO Connectivity Admin"}]}
+  ],
+  "transitions": [
+   {"state": "Provisioned", "action": "Activate", "next_state": "Activated", "allowed": [{"role": "BARO Connectivity Admin"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_sim_status == 'Provisioned'"},
+   {"state": "Activated", "action": "Suspend", "next_state": "Suspended", "allowed": [{"role": "BARO Approver"}, {"role": "BARO Finance Approver"}], "allow_self_approval": 0, "visible": 1, "condition": "doc.baro_sim_status == 'Activated' and doc.baro_notes"},
+   {"state": "Suspended", "action": "Reactivate", "next_state": "Activated", "allowed": [{"role": "BARO Approver"}, {"role": "BARO Finance Approver"}], "allow_self_approval": 0, "visible": 1, "condition": "doc.baro_sim_status == 'Suspended'"},
+   {"state": "Activated", "action": "Deactivate", "next_state": "Deactivated", "allowed": [{"role": "BARO Connectivity Admin"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_sim_status == 'Activated'"},
+   {"state": "Activated", "action": "Confirm Expired", "next_state": "Expired", "allowed": [{"role": "BARO Connectivity Admin"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_sim_status == 'Activated'"},
+   {"state": "Suspended", "action": "Deactivate", "next_state": "Deactivated", "allowed": [{"role": "BARO Connectivity Admin"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_sim_status == 'Suspended'"}
+  ]
+ },
+ {
+  "doctype": "Workflow",
+  "name": "BARO Exception Resolution",
+  "document_type": "Baro Reconciliation Exception",
+  "workflow_state_field": "baro_status",
+  "is_active": 1,
+  "send_email_alert": 0,
+  "override_status": 0,
+  "states": [
+   {"state": "Open", "doc_status": "0", "allow_edit": 1, "allow_cancel": 0, "is_optional": 0, "color": "Red", "role": [{"role": "BARO Service Supervisor"}, {"role": "BARO Stock Manager"}, {"role": "BARO Fleet Officer"}, {"role": "BARO Connectivity Admin"}, {"role": "BARO Accounts User"}]},
+   {"state": "Acknowledged", "doc_status": "0", "allow_edit": 1, "allow_cancel": 0, "is_optional": 0, "color": "Orange", "role": [{"role": "BARO Service Supervisor"}, {"role": "BARO Stock Manager"}, {"role": "BARO Fleet Officer"}, {"role": "BARO Connectivity Admin"}, {"role": "BARO Accounts User"}]},
+   {"state": "In Progress", "doc_status": "0", "allow_edit": 1, "allow_cancel": 0, "is_optional": 0, "color": "Blue", "role": [{"role": "BARO Service Supervisor"}, {"role": "BARO Stock Manager"}, {"role": "BARO Fleet Officer"}, {"role": "BARO Connectivity Admin"}, {"role": "BARO Accounts User"}]},
+   {"state": "Resolved", "doc_status": "0", "allow_edit": 0, "allow_cancel": 0, "is_optional": 0, "color": "Green", "role": [{"role": "BARO Approver"}]},
+   {"state": "Waived", "doc_status": "0", "allow_edit": 0, "allow_cancel": 0, "is_optional": 1, "color": "Gray", "role": [{"role": "BARO Approver"}]}
+  ],
+  "transitions": [
+   {"state": "Open", "action": "Acknowledge", "next_state": "Acknowledged", "allowed": [{"role": "BARO Service Supervisor"}, {"role": "BARO Stock Manager"}, {"role": "BARO Fleet Officer"}, {"role": "BARO Connectivity Admin"}, {"role": "BARO Accounts User"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_status == 'Open'"},
+   {"state": "Acknowledged", "action": "Start Work", "next_state": "In Progress", "allowed": [{"role": "BARO Service Supervisor"}, {"role": "BARO Stock Manager"}, {"role": "BARO Fleet Officer"}, {"role": "BARO Connectivity Admin"}, {"role": "BARO Accounts User"}], "allow_self_approval": 1, "visible": 1, "condition": "doc.baro_status == 'Acknowledged'"},
+   {"state": "In Progress", "action": "Resolve", "next_state": "Resolved", "allowed": [{"role": "BARO Service Supervisor"}, {"role": "BARO Approver"}], "allow_self_approval": 0, "visible": 1, "condition": "doc.baro_status == 'In Progress' and doc.baro_resolution_notes"},
+   {"state": "Open", "action": "Waive", "next_state": "Waived", "allowed": [{"role": "BARO Approver"}], "allow_self_approval": 0, "visible": 1, "condition": "doc.baro_waive_reason"},
+   {"state": "Acknowledged", "action": "Waive", "next_state": "Waived", "allowed": [{"role": "BARO Approver"}], "allow_self_approval": 0, "visible": 1, "condition": "doc.baro_waive_reason"}
+  ]
+ }
+]

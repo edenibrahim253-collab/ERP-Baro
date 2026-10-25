@@ -1,0 +1,20 @@
+[
+ {
+  "doctype": "Property Setter",
+  "doc_type": "Installation Note",
+  "field_name": "customer_address",
+  "property": "reqd",
+  "value": "1",
+  "property_type": "DocField",
+  "module": "baro_field_service"
+ },
+ {
+  "doctype": "Property Setter",
+  "doc_type": "Installation Note",
+  "field_name": "contact_person",
+  "property": "reqd",
+  "value": "1",
+  "property_type": "DocField",
+  "module": "baro_field_service"
+ }
+]

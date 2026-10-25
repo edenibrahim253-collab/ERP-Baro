@@ -2,9 +2,9 @@
 
 A documents-only deliverable cannot be tested, so it must be **checked**. This document records the plan's eight structural checks, implemented as ten automated ones (C1–C10), how each was executed, what it found, and what remains genuinely open. It is written so a reviewer can re-run the whole verification without trusting any number here.
 
-**Re-run:** `bash docs/appendix/consistency-checks.sh` from the package root. It prints one line per check and exits with the number of failures, so it can gate a docs commit. Mermaid rendering (§8) is the one check the script cannot do on this machine.
+**Re-run:** `bash docs/appendix/consistency-checks.sh` from the package root. It prints one line per check and exits with the number of failures, so it can gate a docs commit. Mermaid rendering (§8) is the one check the script cannot do on this machine. Since the design became an app, §11 adds the tree-level checker for `baro_core` itself: `node tools/validate-structure.mjs`.
 
-As of this writing: **10 checks, 0 failures, 2 recorded warnings, 1 residual manual task.**
+As of this writing: **10 document checks + 13 app checks, 0 failures, 2 recorded warnings, 1 residual manual task.**
 
 ---
 
@@ -189,3 +189,38 @@ Blocking questions remain **unanswered by design** (`70` §1): the package propo
 4. `41` §2–§5 — permissions as enforcement, not menu-hiding.
 5. `70` §1 — the seven blocking questions. Then decide who owes each answer and by when.
 6. This document §2 — the fifteen defects, to judge whether the package was checked or merely written.
+
+---
+
+## 11. App-level structural checks (after the `baro_core` build)
+
+Once the design became code, the same discipline moved to the app tree. `tools/validate-structure.mjs`
+is the executable half of that: **`node tools/validate-structure.mjs`** from the package root prints
+one line per check and exits with the failure count, so it can gate a commit exactly like
+`consistency-checks.sh` gates the docs. As of this writing: **13 checks, 0 failures.**
+
+| # | Check | Catches |
+|---|---|---|
+| A1 | every JSON parses | a hand-edited DocType or fixture with a syntax error |
+| A2 | DocType shape: `name`, no duplicate fieldnames, snake_case, `field_order` completeness, `Link`/`Select` options present, `autoname` field exists, controller file and class exist | a field that would vanish at `bench migrate`, a DocType with no controller |
+| A3 | `BARO-*.####` naming series uniformity, and no series on a Single | `30` §3 drift |
+| A4 | every `Link`/`Table`/`Table MultiSelect` target is a DocType defined here or a known standard one | a link to a doctype that was renamed or never built |
+| A5 | a fixture file exists for every `hooks.fixtures` entry; every role reference (DocPerm, workflow transition, `role`-keyed Select option, Python role tuple/`has_role`/`assigned_role`) resolves to `fixtures/role.json` | `40` §9 — a workflow pointing at a missing role silently allows nobody |
+| A6 | workflow states ⊆ the DocType's enum, every enum value has a state, transition targets and reference states are declared, conditions reference real fields | orphan states, `40` §5 closure |
+| A7 | property setters target real DocTypes and fields | a setter that silently does nothing |
+| A8 | report `ref_doctype`, `roles`, and SQL `tab<DocType>` names resolve; workspace card links and `for_role` resolve | a report that 500s on first open |
+| A9 | Python: `baro_core.*` imports and quoted hook paths resolve to real files/functions; `"Baro …"` strings name a defined DocType; no tab/space mixture inside code; balanced delimiters | a `hooks.py` pointing at a function that does not exist — the classic late-night migrate failure |
+| A10 | every `baro_*` field used in Python or a workflow is defined on some DocType or Custom Field | a typo'd fieldname that reads as `None` forever |
+| A11 | **the automation boundary**: no `.submit()`, `.cancel()`, `.amend()`, `docstatus` write, or non-log delete anywhere under `jobs.py` or `integrations/` | `40` §1 erosion, which is the invariant BARO wrote itself |
+| A12 | UQ-DRV columns are written only by `derive.py` and the documented index patch | `31` §4.2's single-writer rule |
+| A13 | docs↔app: every scheduled job in `hooks.py` is named in `60` §3 and vice versa; every `` `baro_*` `` field in `10` exists in the schema | the two lists drifting apart after a phase-2 job is added |
+
+**The checker was itself tested.** Three defects were injected into a throwaway copy of the tree —
+a role renamed to `BARO Approver Typo` in `workflow.json`, a `doc.submit()` appended to `jobs.py`,
+and an undefined `baro_nope_field` key in `settings.py` — and A5/A11/A10 each failed with the right
+message (22 failures reported, all three injected, none incidental). A green harness is only
+meaningful if it can go red, and this one has been shown doing it.
+
+**What A1–A13 cannot check here, and still needs a bench:** Python syntax and import execution,
+DocType JSON acceptance by Frappe's own validator, the `[verify-vs-v16]` items in `04` §4, the
+concurrency proofs in `31` §8, and `41` §10's permission tests. Those remain §8's residual list.

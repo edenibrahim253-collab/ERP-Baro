@@ -1,0 +1,100 @@
+[
+ {
+  "doctype": "Role",
+  "name": "BARO Sales Officer",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO Fleet Officer",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO Installer",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO Service Supervisor",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO Approver",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO Stock Manager",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO Connectivity Admin",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO Support Agent",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO Accounts User",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO Finance Approver",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO Procurement Officer",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO Report Viewer",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO Integrator",
+  "enabled": 1,
+  "desk_access": 0,
+  "is_custom": 1
+ },
+ {
+  "doctype": "Role",
+  "name": "BARO System Manager",
+  "enabled": 1,
+  "desk_access": 1,
+  "is_custom": 1
+ }
+]

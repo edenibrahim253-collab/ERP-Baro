@@ -1,0 +1,7 @@
+baro_fleet
+baro_devices
+baro_connectivity
+baro_field_service
+baro_billing
+baro_integrations
+baro_settings

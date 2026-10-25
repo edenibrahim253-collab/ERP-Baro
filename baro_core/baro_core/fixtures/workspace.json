@@ -1,0 +1,52 @@
+[
+ {
+  "doctype": "Workspace",
+  "name": "BARO Fleet",
+  "title": "BARO Fleet",
+  "module": "baro_fleet",
+  "icon": "fa fa-truck",
+  "public": 0,
+  "for_role": [
+   {"role": "BARO Fleet Officer"},
+   {"role": "BARO Sales Officer"},
+   {"role": "BARO Service Supervisor"},
+   {"role": "BARO Approver"},
+   {"role": "BARO Stock Manager"},
+   {"role": "BARO Support Agent"},
+   {"role": "BARO System Manager"}
+  ],
+  "content": "[{\"type\": \"Links\", \"data\": {\"links\": [{\"type\": \"DocType\", \"link_to\": \"Baro Vehicle\"}, {\"type\": \"DocType\", \"link_to\": \"Baro Device Assignment\"}, {\"type\": \"DocType\", \"link_to\": \"Baro SIM Card\"}, {\"type\": \"DocType\", \"link_to\": \"Baro Reconciliation Exception\"}, {\"type\": \"Report\", \"link_to\": \"BARO - Fleet Reconciliation\"}]}}]"
+ },
+ {
+  "doctype": "Workspace",
+  "name": "BARO Devices",
+  "title": "BARO Devices",
+  "module": "baro_devices",
+  "icon": "fa fa-mobile-alt",
+  "public": 0,
+  "for_role": [
+   {"role": "BARO Stock Manager"},
+   {"role": "BARO Service Supervisor"},
+   {"role": "BARO Installer"},
+   {"role": "BARO Connectivity Admin"},
+   {"role": "BARO System Manager"}
+  ],
+  "content": "[{\"type\": \"Links\", \"data\": {\"links\": [{\"type\": \"DocType\", \"link_to\": \"Serial No\"}, {\"type\": \"DocType\", \"link_to\": \"Baro Firmware History\"}, {\"type\": \"DocType\", \"link_to\": \"Baro Device RMA\"}, {\"type\": \"DocType\", \"link_to\": \"Baro Platform Mapping\"}]}}]"
+ },
+ {
+  "doctype": "Workspace",
+  "name": "BARO Installations",
+  "title": "BARO Installations",
+  "module": "baro_field_service",
+  "icon": "fa fa-wrench",
+  "public": 0,
+  "for_role": [
+   {"role": "BARO Installer"},
+   {"role": "BARO Service Supervisor"},
+   {"role": "BARO Fleet Officer"},
+   {"role": "BARO Support Agent"},
+   {"role": "BARO System Manager"}
+  ],
+  "content": "[{\"type\": \"Links\", \"data\": {\"links\": [{\"type\": \"DocType\", \"link_to\": \"Installation Note\"}, {\"type\": \"DocType\", \"link_to\": \"Baro Device Assignment\"}, {\"type\": \"Report\", \"link_to\": \"BARO - Pending Activations\"}, {\"type\": \"Report\", \"link_to\": \"BARO - Assignment History\"}]}}]"
+ }
+]
